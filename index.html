@@ -435,10 +435,10 @@ let tableauReady  = false;
 
 // Default suggestions (swapped for data-aware ones once loaded)
 const DEFAULT_SUGGESTIONS = [
-  'Summarise this data',
-  'What are the key trends?',
-  'Any anomalies to flag?',
-  'What does this tell us?',
+  'Summarise this month's performance',
+  'What is the AI Resolution Rate?',
+  'Which days had the most transfers?',
+  'How much cost was saved this month?',
 ];
 
 // ── Init ───────────────────────────────────────────────────────────────────
@@ -568,10 +568,10 @@ async function loadDashboardContext() {
 
     // Suggest data-aware questions
     renderSuggestions([
-      `Summarise ${dashboardName}`,
-      'What are the top performers?',
-      'Any concerning trends?',
-      'Compare this period to last',
+      'Summarise this month's performance',
+      'Which days had the highest AI Resolution Rate?',
+      'What were the top transfer destinations?',
+      'How much staff time was saved?',
     ]);
 
     // Mark context bar green
@@ -681,12 +681,35 @@ async function callClaude(userMessage) {
     ? JSON.stringify(dashboardData, null, 2).slice(0, 12000)
     : 'No dashboard data available.';
 
-  const sysPrompt = (systemPrompt ||
-    'You are a helpful data analyst embedded in a Tableau dashboard.') +
-    `\n\nYou are viewing the Tableau dashboard: "${dashboardName}".\n` +
-    `Here is the current dashboard data (up to 200 rows per sheet):\n\`\`\`json\n${dataContext}\n\`\`\`\n` +
-    `Answer the user's questions based on this data. Be concise and specific. ` +
-    `Format numbers clearly. If you reference specific values, cite them directly from the data.`;
+  const defaultSystemPrompt = `You are an AI data analyst embedded in a Tableau dashboard for Skye, an AI-powered hotel guest communication platform.
+
+## About the Data
+The dashboard shows Skye AI conversation logs — interactions between hotel guests and the Skye AI assistant. The data can be filtered by Hotel and by Month, and is broken down by Day of Month.
+
+## Key Metrics — definitions
+- **Total Skye Interactions**: Total number of AI conversations handled by Skye
+- **AI Resolved**: Conversations fully handled and closed by Skye without human involvement
+- **AI Transferred**: Conversations where Skye transferred the guest to a hotel department or service (e.g. Front Desk, Reservations, Restaurant, Accounting, Guest Services)
+- **Call Centre Reduction Rate**: The % of workload removed from the hotel's call centre — i.e. calls handled by AI that didn't need a human agent
+- **AI Resolution Rate**: AI Resolved as a % of Total Skye Interactions — measures how self-sufficient the AI is
+- **AI Interaction Cost Saving**: The dollar value of money saved by having Skye handle conversations instead of human staff
+- **Staff Time Saved**: Minutes that hotel staff didn't have to spend on guest calls because Skye handled them
+
+## Dashboard Structure
+- Data is displayed by **Day of Month** (daily breakdown)
+- There is a **Hotel filter** (to view a specific property) and a **Month filter** (to view a specific month)
+- The current data in context reflects whatever filters are currently active
+
+## How to Answer
+- Be specific — reference actual numbers from the data when answering
+- If the user asks about trends, look across the days of the month for patterns
+- If asked about a specific hotel or month, note which filters appear to be active based on the data
+- Format currency as dollars, percentages with 1 decimal place, and time in minutes or hours as appropriate
+- If data seems limited to one month or one hotel, mention that the dashboard filter may be applied`;
+
+  const sysPrompt = (systemPrompt || defaultSystemPrompt) +
+    `\n\n## Current Dashboard Data\nYou are viewing: "${dashboardName}".\n` +
+    `Here is the live data from the dashboard (reflects current filter selections):\n\`\`\`json\n${dataContext}\n\`\`\``;
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
