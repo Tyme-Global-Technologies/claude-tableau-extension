@@ -6,6 +6,9 @@
     <description>Ask Claude questions about your dashboard data</description>
     <author name="Anthropic" email="support@anthropic.com" organization="Anthropic" website="https://anthropic.com"/>
     <min-api-version>1.4</min-api-version>
+    <permissions>
+      <permission>full data</permission>
+    </permissions>
     <source-location>
       <url>https://tyme-global-technologies.github.io/claude-tableau-extension/</url>
     </source-location>
