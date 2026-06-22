@@ -9,10 +9,10 @@
     <source-location>
       <url>https://tyme-global-technologies.github.io/claude-tableau-extension/</url>
     </source-location>
+    <icon>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZxjeCPoAAAGSSURBVDiNpZMxaxsxGIaf85WrQJSiDCpFhC6hQ8nQX9DBY+gP6B/IVEiHQIfO2Ts0dMvQxVCKhwZCIUMpBAolhEIIIYTwDSmlSCmllFJKKaWUUqoqVdXMV3Xf933f9w7QNE1TVVVVVVVVVYGZmZkBMzMzMzMzMwNmZmZmZmZmZmZmZmYGzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM</icon>
     <permissions>
       <permission>full data</permission>
     </permissions>
-    <icon>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZxjeCPoAAAGSSURBVDiNpZMxaxsxGIaf85WrQJSiDCpFhC6hQ8nQX9DBY+gP6B/IVEiHQIfO2Ts0dMvQxVCKhwZCIUMpBAolhEIIIYTwDSmlSCmllFJKKaWUUqoqVdXMV3Xf933f9w7QNE1TVVVVVVVVVYGZmZkBMzMzMzMzMwNmZmZmZmZmZmZmZmYGzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM</icon>
   </dashboard-extension>
   <resources>
     <resource id="name">
