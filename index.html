@@ -5,7 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Claude AI Assistant</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://extensions.tableausoftware.com/resources/tableau.extensions.1.latest.min.js"></script>
+  <!-- Tableau Extensions API is injected by Tableau Desktop/Cloud automatically -->
+  <!-- Fallback script for running in a standalone browser -->
+  <script>
+    // If running outside Tableau, define a stub so the app degrades gracefully
+    if (typeof tableau === 'undefined') {
+      window.__tableauNotAvailable = true;
+    }
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
