@@ -535,14 +535,30 @@ async function loadDashboardContext() {
 
     await Promise.all(sheets.map(async (sheet) => {
       try {
-        const st = await sheet.getSummaryDataAsync();
-        const cols = st.columns.map(c => c.fieldName);
-        const rows = st.data.slice(0, 200).map(row =>
-          Object.fromEntries(cols.map((c, i) => [c, row[i].formattedValue]))
-        );
-        sheetData[sheet.name] = { columns: cols, rows };
+        // Try underlying data first (full row-level detail including dates/months)
+        let cols, rows;
+        try {
+          const ut = await sheet.getUnderlyingTableDataAsync(
+            sheet.getUnderlyingTablesAsync
+              ? (await sheet.getUnderlyingTablesAsync())[0]?.id
+              : undefined,
+            { maxRows: 500, ignoreAliases: false, ignoreSelection: true, includeAllColumns: true }
+          );
+          cols = ut.columns.map(c => c.fieldName);
+          rows = ut.data.slice(0, 500).map(row =>
+            Object.fromEntries(cols.map((c, i) => [c, row[i].formattedValue]))
+          );
+        } catch(e) {
+          // Fall back to summary data if underlying not available
+          const st = await sheet.getSummaryDataAsync({ ignoreSelection: true });
+          cols = st.columns.map(c => c.fieldName);
+          rows = st.data.slice(0, 500).map(row =>
+            Object.fromEntries(cols.map((c, i) => [c, row[i].formattedValue]))
+          );
+        }
+        sheetData[sheet.name] = { columns: cols, rowCount: rows.length, rows };
       } catch(e) {
-        sheetData[sheet.name] = { error: 'Could not read sheet data' };
+        sheetData[sheet.name] = { error: 'Could not read sheet data: ' + e.message };
       }
     }));
 
