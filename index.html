@@ -468,19 +468,38 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ── Tableau Init ───────────────────────────────────────────────────────────
-function initTableau() {
-  try {
-    tableau.extensions.initializeAsync().then(() => {
-      tableauReady = true;
-      loadDashboardContext();
-    }).catch(err => {
-      console.warn('Tableau init failed (running outside Tableau?):', err);
-      setDemoMode();
-    });
-  } catch(e) {
-    console.warn('Tableau Extensions API not available:', e);
-    setDemoMode();
+function showDiag(msg) {
+  let bar = document.getElementById('diag-bar');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = 'diag-bar';
+    bar.style.cssText = 'background:#7b2d2d;color:#fff;font-size:11px;padding:6px 14px;word-break:break-all;flex-shrink:0;';
+    document.getElementById('app').insertBefore(bar, document.getElementById('context-bar'));
   }
+  bar.textContent = '⚠ ' + msg;
+}
+
+function initTableau() {
+  if (typeof tableau === 'undefined') {
+    showDiag('tableau object undefined — Extensions API script did not load.');
+    setDemoMode();
+    return;
+  }
+  if (!tableau.extensions) {
+    showDiag('tableau.extensions undefined — API loaded but extensions not available.');
+    setDemoMode();
+    return;
+  }
+  showDiag('Calling initializeAsync…');
+  tableau.extensions.initializeAsync().then(() => {
+    const bar = document.getElementById('diag-bar');
+    if (bar) bar.remove();
+    tableauReady = true;
+    loadDashboardContext();
+  }).catch(err => {
+    showDiag('initializeAsync failed: ' + (err && (err.message || JSON.stringify(err))));
+    setDemoMode();
+  });
 }
 
 function setDemoMode() {
